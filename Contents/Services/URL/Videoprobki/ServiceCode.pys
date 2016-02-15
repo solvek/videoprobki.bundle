@@ -26,25 +26,31 @@ def MediaObjectsForURL(url):
 
     return [
         MediaObject(
-            height = 800,
-            width = 1280,
+            video_resolution = 576,
+            # height = 800,
+            # width = 1280,
             video_codec = VideoCodec.H264,
-            optimized_for_streaming = True,
+            # optimized_for_streaming = True,
             container = Container.MP4,
+            protocol='hls',
             parts = [
                 PartObject(key = Callback(PlayVideo, url=url))
+                # PartObject(key = HTTPLiveStreamURL(Callback(PlayVideo, url=url)))
             ]
         )
     ]
 
+@indirect
 def PlayVideo(url):
 
     # content = HTTP.Request(url).content
 
-    video_url = 'http://vs7.videoprobki.com.ua/streams/cam188stream_1455527504.mp4'
+    video_url =
 
     Log.Debug("Requested url: %s, Playing url: %s" % (url, video_url))
 
     # return IndirectResponse(VideoClipObject, key=video_url)
     # return video_url
-    return Redirect(video_url)
+    # return Redirect(video_url)
+    # return WebVideoURL(video_url)
+    return IndirectResponse(VideoClipObject, key=HTTPLiveStreamURL(video_url))
