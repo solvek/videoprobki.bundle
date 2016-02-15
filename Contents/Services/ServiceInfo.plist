@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>URL</key>
+  <dict>
+    <key>Videoprobki</key>
+    <dict>
+      <key>URLPatterns</key>
+      <array>
+        <string>^http://videoprobki\.ua(/[^/]+)?/camera/</string>
+      </array>
+      <key>TestURLs</key>
+      <array>
+        <string>http://videoprobki.ua/uk/camera/188-rozvyazka-prosp-bazhana-%D1%96-dn%D1%96provsko%D1%97-nab-metro-osokorki?c=Kyiiv</string>
+      </array>
+    </dict>
+  </dict>
+</dict>
+</plist>

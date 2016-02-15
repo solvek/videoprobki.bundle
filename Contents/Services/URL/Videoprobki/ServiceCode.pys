@@ -1,0 +1,50 @@
+def MetadataObjectForURL(url):
+
+    page = HTML.ElementFromURL(url)
+
+    title = page.xpath('//h1/span')[0].text
+
+    node = page.xpath('//div[@class="node"]/div')[1]
+
+    description = HTML.StringFromElement(node.xpath('./div')[3], encoding='utf8')
+    description = String.StripTags(description)
+
+    thumb = node.xpath('./div')[4].xpath('//img')[0].get('src')
+
+    Log.Debug("Meta object requested url: %s, title: %s, description: %s, thumb: %s" % (url, title, description, thumb))
+
+    return VideoClipObject(
+        title = title,
+        summary = description,
+        thumb = Resource.ContentsOfURLWithFallback(thumb)
+    )
+
+
+def MediaObjectsForURL(url):
+
+    Log.Debug("Media objects requested: %s" % (url))
+
+    return [
+        MediaObject(
+            height = 800,
+            width = 1280,
+            video_codec = VideoCodec.H264,
+            optimized_for_streaming = True,
+            container = Container.MP4,
+            parts = [
+                PartObject(key = Callback(PlayVideo, url=url))
+            ]
+        )
+    ]
+
+def PlayVideo(url):
+
+    # content = HTTP.Request(url).content
+
+    video_url = 'http://vs7.videoprobki.com.ua/streams/cam188stream_1455527504.mp4'
+
+    Log.Debug("Requested url: %s, Playing url: %s" % (url, video_url))
+
+    # return IndirectResponse(VideoClipObject, key=video_url)
+    # return video_url
+    return Redirect(video_url)
