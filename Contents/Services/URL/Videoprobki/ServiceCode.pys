@@ -43,11 +43,19 @@ def MediaObjectsForURL(url):
 @indirect
 def PlayVideo(url):
 
-    # content = HTTP.Request(url).content
+    streams = HTTP.Request(
+        'http://videoprobki.ua/gplmod7',
+        data='p1=cam188&p2=2&p3=1&p4=1',
+        headers={
+            'Content-Type' : 'application/x-www-form-urlencoded'
+            }
+        ).content
 
-    video_url = 'http://vs7.videoprobki.com.ua/streams/cam188stream_1455527504.mp4'
+    Log.Debug('Streams: %s' % streams);
 
-    Log.Debug("Requested url: %s, Playing url: %s" % (url, video_url))
+    video_url = 'http://vs7.videoprobki.com.ua/streams/%s' % [x.strip() for x in streams.split(',')][1]
+
+    Log.Debug("Requested url: %s, Playing url: '%s'" % (url, video_url))
 
     # return IndirectResponse(VideoClipObject, key=video_url)
     # return video_url
