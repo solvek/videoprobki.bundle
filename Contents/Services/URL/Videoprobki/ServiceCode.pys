@@ -45,7 +45,7 @@ def PlayVideo(url):
 
     # content = HTTP.Request(url).content
 
-    video_url =
+    video_url = 'http://vs7.videoprobki.com.ua/streams/cam188stream_1455527504.mp4'
 
     Log.Debug("Requested url: %s, Playing url: %s" % (url, video_url))
 
