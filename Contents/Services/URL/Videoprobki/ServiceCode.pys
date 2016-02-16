@@ -26,13 +26,12 @@ def MediaObjectsForURL(url):
 
     return [
         MediaObject(
-            video_resolution = 576,
+            video_resolution = 800,
             # height = 800,
             # width = 1280,
             video_codec = VideoCodec.H264,
             # optimized_for_streaming = True,
             container = Container.MP4,
-            protocol='hls',
             parts = [
                 PartObject(key = Callback(PlayVideo, url=url))
                 # PartObject(key = HTTPLiveStreamURL(Callback(PlayVideo, url=url)))
@@ -40,7 +39,7 @@ def MediaObjectsForURL(url):
         )
     ]
 
-@indirect
+# @indirect
 def PlayVideo(url):
 
     streams = HTTP.Request(
@@ -53,12 +52,12 @@ def PlayVideo(url):
 
     Log.Debug('Streams: %s' % streams);
 
-    video_url = 'http://vs7.videoprobki.com.ua/streams/%s' % [x.strip() for x in streams.split(',')][1]
+    video_url = 'http://vs7.videoprobki.com.ua/streams/%s' % [x.strip() for x in streams.split(',')][2]
 
     Log.Debug("Requested url: %s, Playing url: '%s'" % (url, video_url))
 
     # return IndirectResponse(VideoClipObject, key=video_url)
     # return video_url
-    # return Redirect(video_url)
+    return Redirect(video_url)
     # return WebVideoURL(video_url)
-    return IndirectResponse(VideoClipObject, key=HTTPLiveStreamURL(video_url))
+    # return IndirectResponse(VideoClipObject, key=HTTPLiveStreamURL(video_url))
