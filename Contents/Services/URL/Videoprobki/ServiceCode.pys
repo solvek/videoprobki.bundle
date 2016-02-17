@@ -26,11 +26,12 @@ def MediaObjectsForURL(url):
 
     return [
         MediaObject(
-            video_resolution = 800,
+            video_resolution = '800',
             # height = 800,
             # width = 1280,
             video_codec = VideoCodec.H264,
             audio_codec = AudioCodec.AAC,
+            audio_channels = 2,
             optimized_for_streaming = True,
             container = Container.MP4,
             parts = [
@@ -40,7 +41,7 @@ def MediaObjectsForURL(url):
         )
     ]
 
-# @indirect
+@indirect
 def PlayVideo(url):
 
     streams = HTTP.Request(
@@ -57,8 +58,8 @@ def PlayVideo(url):
 
     Log.Debug("Requested url: %s, Playing url: '%s'" % (url, video_url))
 
-    # return IndirectResponse(VideoClipObject, key=video_url)
+    return IndirectResponse(VideoClipObject, key=video_url)
     # return video_url
-    return Redirect(video_url)
+    # return Redirect(video_url)
     # return WebVideoURL(video_url)
     # return IndirectResponse(VideoClipObject, key=HTTPLiveStreamURL(video_url))
