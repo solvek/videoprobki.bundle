@@ -9,7 +9,6 @@
       <key>URLPatterns</key>
       <array>
         <string>^http://(mobile\.)?videoprobki\.ua(/[^/]+)?/camera/</string>
-        <string>^http://(mobile\.)?videoprobki\.ua(/[^/]+)?/node/</string>
       </array>
       <key>TestURLs</key>
       <array>

@@ -5,7 +5,7 @@ ICON   = 'icon-default.png'
 
 PREFIX = '/video/videoprobki'
 
-BASE_URL = 'http://mobile.videoprobki.ua%s'
+BASE_URL = 'http://videoprobki.ua%s'
 
 PARSED = 'parsed'
 
@@ -58,7 +58,7 @@ def MenuCities():
 
 ################################################
 @route(PREFIX+'/cities/{city}')
-def MenuCity(city='dddd'):
+def MenuCity(city):
 	Log.Debug("Menu for city "+city)
 	Dict['city'] = city
 
@@ -70,7 +70,7 @@ def MenuCity(city='dddd'):
 ################################################
 @route(PREFIX+'/cities/{city}/{district}')
 def MenuDistrict(city, district):
-	oc = ObjectContainer()
+	oc = ObjectContainer(title2=district)
 
 	district = GetContent().get(city).get(district)
 
@@ -81,7 +81,7 @@ def MenuDistrict(city, district):
 ################################################
 @route(PREFIX+'/exact/{city}/districts')
 def CityDistricts(city):
-	oc = ObjectContainer()
+	oc = ObjectContainer(title2=city)
 
 	districts = GetContent().get(city)
 
@@ -98,7 +98,7 @@ def CityDistricts(city):
 ################################################
 @route(PREFIX+'/exact/{city}/cameras')
 def CityCameras(city):
-	oc = ObjectContainer()
+	oc = ObjectContainer(title2=city)
 
 	districts = GetContent().get(city)
 	for district in districts.values():
@@ -116,7 +116,8 @@ def AppendDistrict(oc, district):
 		oc.add(VideoClipObject(
 			url = camera.get('url'),
 			title = camera.get('place')+" "+camera.get('direction'),
-			summary = camera.get('city')+", "+camera.get('district')
+			summary = camera.get('city')+", "+camera.get('district'),
+			thumb = Callback(Thumb, url=camera.get('image'))
 		))
 
 ################################################
@@ -126,12 +127,17 @@ def GetContent():
 
 	parsed = {}
 
-	content = HTML.ElementFromURL(BASE_URL % '/uk/all-cameras', encoding='utf-8')
+	page = HTML.ElementFromURL(BASE_URL % '/uk/our-cameras', encoding='utf-8')
 
-	for camera in content.xpath('//div[contains(@class, "cam-info")]/div[2]'):
-		url = BASE_URL % camera.xpath('.//a')[0].get('href')
+	for camera in page.xpath('//div[contains(@class, "pane")]/table//tr/td/table'):
+		rows = camera.xpath('.//tr')
+		url = BASE_URL % rows[1].xpath('.//a')[0].get('href')
 
-		parts = [extractValue(part) for part in HTML.StringFromElement(camera).decode().split('<br>')]
+		image = rows[0].xpath('.//img')[0].get('src')
+
+		details = rows[0].xpath('./td/div')[1]
+
+		parts = [extractValue(part) for part in HTML.StringFromElement(details).decode().split('<br>')]
 
 		city = parts[0]
 		district = parts[1]
@@ -157,11 +163,12 @@ def GetContent():
 		                     'district': district,
 		                     'place':place,
 		                     'direction':direction,
+		                     'image':image,
 		                     'url':url})
 
 	Data.SaveObject(PARSED, parsed)
 
-	# Log.Debug('Whole content %s' % JSON.StringFromObject(parsed))
+	Log.Debug('Whole content %s' % JSON.StringFromObject(parsed))
 
 	return parsed
 
@@ -171,10 +178,10 @@ def extractValue(s):
 	return s[f+2:].strip()
 
 ################################################
-# def Thumb(url):
+def Thumb(url):
 
-#   try:
-#     data = HTTP.Request(url, cacheTime = CACHE_1MONTH).content
-#     return DataObject(data, 'image/jpeg')
-#   except:
-#     return Redirect(R(ICON))
+  try:
+    data = HTTP.Request(url, cacheTime = CACHE_1MONTH).content
+    return DataObject(data, 'image/jpeg')
+  except:
+    return Redirect(R(ICON))
