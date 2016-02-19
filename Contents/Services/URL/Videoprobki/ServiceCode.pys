@@ -1,3 +1,6 @@
+RE_CAMID = Regex('/camera/(?P<id>\d+)-')
+RE_EXTRACT = Regex('"(?P<base_url>http://.+/streams/)",.+"(?P<gplmod>gplmod\d+)"')
+
 def MetadataObjectForURL(url):
 
     Log.Debug("Meta object requested url: %s" % url)
@@ -29,8 +32,6 @@ def MediaObjectsForURL(url):
     return [
         MediaObject(
             video_resolution = '800',
-            # height = 800,
-            # width = 1280,
             video_codec = VideoCodec.H264,
             audio_codec = AudioCodec.AAC,
             audio_channels = 2,
@@ -38,7 +39,6 @@ def MediaObjectsForURL(url):
             container = Container.MP4,
             parts = [
                 PartObject(key = Callback(PlayVideo, url=url))
-                # PartObject(key = HTTPLiveStreamURL(Callback(PlayVideo, url=url)))
             ]
         )
     ]
@@ -46,9 +46,20 @@ def MediaObjectsForURL(url):
 @indirect
 def PlayVideo(url):
 
+    camId = RE_CAMID.search(url).group('id')
+
+    page = HTML.ElementFromURL(url)
+
+    text = page.xpath('//div[contains(@class, "node")]//script')[0].text
+
+    m = RE_EXTRACT.search(text)
+
+    gplmod = m.group('gplmod')
+    base_url = m.group('base_url')
+
     streams = HTTP.Request(
-        'http://videoprobki.ua/gplmod7',
-        data='p1=cam188&p2=2&p3=1&p4=1',
+        'http://videoprobki.ua/%s' % gplmod,
+        data='p1=cam%s&p2=2&p3=1&p4=1' % camId,
         headers={
             'Content-Type' : 'application/x-www-form-urlencoded'
             }
@@ -56,12 +67,8 @@ def PlayVideo(url):
 
     Log.Debug('Streams: %s' % streams);
 
-    video_url = 'http://vs7.videoprobki.com.ua/streams/%s' % [x.strip() for x in streams.split(',')][2]
+    video_url = base_url+[x.strip() for x in streams.split(',')][-1]
 
     Log.Debug("Requested url: %s, Playing url: '%s'" % (url, video_url))
 
     return IndirectResponse(VideoClipObject, key=video_url)
-    # return video_url
-    # return Redirect(video_url)
-    # return WebVideoURL(video_url)
-    # return IndirectResponse(VideoClipObject, key=HTTPLiveStreamURL(video_url))
