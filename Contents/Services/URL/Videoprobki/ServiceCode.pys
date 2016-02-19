@@ -1,5 +1,7 @@
 def MetadataObjectForURL(url):
 
+    Log.Debug("Meta object requested url: %s" % url)
+
     page = HTML.ElementFromURL(url)
 
     title = page.xpath('//h1/span')[0].text
