@@ -19,7 +19,7 @@ def Start():
 
 	Data.Remove(PARSED)
 
-	Dict['city'] = None
+	# Dict['city'] = None
 
 #################################################
 @handler(PREFIX, TITLE)

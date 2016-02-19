@@ -8,7 +8,8 @@
     <dict>
       <key>URLPatterns</key>
       <array>
-        <string>^http://(mobile\.)?videoprobki\.ua(/[^/]+)?/camera/</string>
+        <string>^http://videoprobki\.ua(/[^/]+)?/camera/</string>
+        <string>^http://videoprobki.ua(/[^/]+)?/node/</string>
       </array>
       <key>TestURLs</key>
       <array>
