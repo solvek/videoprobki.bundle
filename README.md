@@ -6,10 +6,10 @@
 1. У вас має бути проінстальований Plex Media Server
 2. Скачати архів з плагіном [звідси](https://github.com/solvek/videoprobki.bundle/archive/master.zip)
 3. Розпкувати вміст у папку плагінів Plex сервера. Вона знаходиться за одним із шляхів
-3.1. на Windows: `C:\Users\USERNAME\AppData\Local\Plex Media Server\Plug-ins`
-3.2. на Mac: `~Library/Application Support/Plex Media Server/Plug-ins`
-3.3. на Linux: `/usr/lib/plexmediaserver/Resources/Plug-ins or /var/lib/plex/Plex Media Server/Plug-ins`
-3.4. на FreeBSD `usr/pbi/plexmediaserver-amd64/plexdata/Plex\ Media\ Server/Plug-ins/`
+ * на Windows: `C:\Users\USERNAME\AppData\Local\Plex Media Server\Plug-ins`
+ * на Mac: `~Library/Application Support/Plex Media Server/Plug-ins`
+ * на Linux: `/usr/lib/plexmediaserver/Resources/Plug-ins or /var/lib/plex/Plex Media Server/Plug-ins`
+ * на FreeBSD `usr/pbi/plexmediaserver-amd64/plexdata/Plex\ Media\ Server/Plug-ins/`
 4. Перейменувати каталог з плагіном з `videoprobki.bundle-master` в `videoprobki.bundle`
 5. Додаткова інформація про інсталяцію Plex плугінів вручну
 6. Перезапустити Plex Media Server (або комп’ютер)
