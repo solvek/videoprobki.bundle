@@ -1,4 +1,4 @@
-RE_EXTRACT = Regex('"(?P<cam_id>cam\d+)",.+"(?P<base_url>http://.+/streams/)",.+"(?P<gplmod>gplmod\d+)"')
+RE_EXTRACT = Regex('"(?P<cam_id>cam\d+)",.+"(?P<base_url>(http|rtmp)://.+/streams/)",.+"(?P<gplmod>gplmod\d+)"')
 
 def MetadataObjectForURL(url):
 
@@ -49,6 +49,8 @@ def PlayVideo(url):
 
     text = page.xpath('//div[contains(@class, "node")]//script')[0].text
 
+    # Log.Debug('Extracted text: %s' % text)
+
     m = RE_EXTRACT.search(text)
 
     camId = m.group('cam_id')
@@ -66,6 +68,9 @@ def PlayVideo(url):
     Log.Debug('Streams: %s' % streams);
 
     video_url = base_url+[x.strip() for x in streams.split(',')][-1]
+
+    if video_url.startswith('rtmp:'):
+        video_url = 'http:'+video_url[5:]
 
     Log.Debug("Requested url: %s, Playing url: '%s'" % (url, video_url))
 
